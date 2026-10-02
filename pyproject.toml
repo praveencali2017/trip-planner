@@ -1,0 +1,42 @@
+[project]
+name = "itinerary-planner"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Praveen", email = "praveenknjun12@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.142.2",
+    "langchain>=1.4.3",
+    "langchain-openai>=1.6.7",
+    "langgraph>=1.2.12",
+    "openai>=3.24.0",
+    "pymupdf>=1.28.2",
+    "python-dotenv>=1.2.4",
+    "uvicorn[standard]>=0.54.0",
+    "youtube-transcript-api>=1.2.4",
+]
+
+[project.scripts]
+itinerary-planner = "itinerary_planner:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "ipykernel>=7.4.0",
+    "jupyterlab>=4.6.4",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+# PyMuPDF's SWIG bindings emit these on import; not actionable here.
+filterwarnings = ["ignore:builtin type .* has no __module__ attribute:DeprecationWarning"]
