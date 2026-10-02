@@ -6,10 +6,28 @@ A ReAct-style LangGraph agent that plans trips, with a FastAPI streaming backend
 - Otherwise it **researches the destination** with OpenAI web search.
 - It asks for your current location / destination if they're missing, and remembers the conversation per thread.
 
+## Screenshots
+
+**Start a trip** — pick an example or describe your own.
+
+![Empty chat with example prompts](docs/screenshots/01-start.jpg)
+
+**It asks for what's missing, then shows what it's doing** while it researches.
+
+![The planner asks for the current location, then shows "Researching Kyoto on the web…"](docs/screenshots/02-researching.jpg)
+
+**The itinerary streams in** as formatted Markdown; **Download PDF** becomes available.
+
+![A streamed 3-day Kyoto itinerary](docs/screenshots/03-itinerary.jpg)
+
+**Download PDF** — the LLM polishes the plan into a structured, day-by-day document.
+
+![First page of the exported itinerary PDF](docs/screenshots/04-pdf-export.png)
+
 ## Setup
 
 ```bash
-cp .env.example .env          # add OPENAI_API_KEY (optional: MODEL_NAME, FRONTEND_ORIGIN)
+cp .env.example .env          # add OPENAI_API_KEY; the other settings are optional
 uv sync
 cd frontend && npm install
 ```
@@ -17,9 +35,22 @@ cd frontend && npm install
 ## Run
 
 ```bash
-uv run itinerary-planner      # API on http://127.0.0.1:8001 (PORT=..., RELOAD=1 for auto-reload)
-cd frontend && npm run dev    # UI on http://localhost:5173 (proxies /api to :8001)
+uv run itinerary-planner      # API on http://127.0.0.1:$PORT (default 8001)
+cd frontend && npm run dev    # UI on http://localhost:5173, proxies /api to the same HOST/PORT
 ```
+
+Both read `HOST` and `PORT` from the project-root `.env`, so changing them there moves the API
+and the UI's proxy together (restart both after a change). Set `RELOAD=1` to auto-reload the API
+on code changes.
+
+## Test
+
+```bash
+uv run pytest                 # backend: unit + integration (OpenAI and YouTube are faked)
+cd frontend && npm test       # frontend: Vitest
+```
+
+CI runs both on every push and pull request (`.github/workflows/ci.yaml`).
 
 ## API
 
